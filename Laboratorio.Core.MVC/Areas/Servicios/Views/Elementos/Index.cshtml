@@ -1,0 +1,138 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<div id="app-elementos">
+    <div class="panel" v-show="showPanel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Elementos</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 text-sm pad-btm">Agregar un nuevo elemento:</div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="elemento.nombre" type="text" class="form-control" placeholder="Nombre">
+                </div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="elemento.unidadMedida" type="text" class="form-control" placeholder="Unidad de Medida">
+                </div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="elemento.notas" type="text" class="form-control" placeholder="Notas">
+                </div>
+            </div>
+            <div class="row text-right pad-btm">
+                <div class="col-md-12">
+                    <button v-on:click="submitData" class="btn btn-rounded btn-primary">Agregar elemento</button>
+                </div>
+            </div>
+            <div class="list-group">
+                <li v-for="elemento in elementos" class="list-group-item">
+                    <span class="pull-right text-bold">
+                        <button v-on:click="removeElement(elemento.Id)" class="btn btn-dark btn-xs btn-circle">
+                            <i class="fa fa-close"></i>
+                        </button>
+                    </span>
+
+                    <h5 class="list-group-item-heading">{{elemento.Nombre}} <span class="text-thin">({{elemento.UnidadMedida}})</span></h5>
+                    <em>{{elemento.Notas}}</em>
+
+                </li>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const appElementos = new Vue({
+        el: '#app-elementos',
+        data: {
+            elementos: [],
+            elemento: {
+                nombre: '',
+                unidadMedida: '',
+                notas: ''
+            },
+            showPanel: false
+        },
+        created() {
+            @*fetch('@Url.Action("ObtenerElementos", "Elementos")')
+                .then(response => response.json())
+                .then(json => { this.elementos = json.elementos });*@
+        },
+        methods: {
+            submitData(event) {
+                if (appElementos.elemento.nombre !== "" && appElementos.elemento.unidadMedida !== "" && appElementos.elemento.notas !== "") {
+                    event.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("CrearElemento", "Elementos")?idEstudio=' + appEstudios.activeIndex,
+                        data: this.elemento,
+                        success: function (result, status, xhr) {
+                            if (result.includes("Error")) {
+                                msgAlert(result, "danger");
+                            } else {
+                                appElementos.elemento = {
+                                    nombre: '',
+                                    unidadMedida: '',
+                                    notas: ''
+                                };
+                                appElementos.refresh(appEstudios.activeIndex);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            var msg = '<span class="text-bold">' + error + '</span><br/>Estatus: ' + xhr.status + '<br/>Descripción: ' + xhr.statusText;
+                            msgAlert(msg, "danger");
+                        }
+                    });
+                } else {
+                    msgAlert("Campos vacíos", "warning");
+                }
+            },
+            refresh(idEstudios) {
+                fetch('@Url.Action("ObtenerElementos", "Elementos")/?idEstudios=' + idEstudios)
+                    .then(response => response.json())
+                    .then(json => { this.elementos = json.elementos });
+                this.showPanel = true;
+            },
+            removeElement(value) {
+                debugger 
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("BorrarElemento", "Elementos")/?idEstudios='+appEstudios.activeIndex,
+                    data: { value },
+                    success: function (result, status, xhr) {
+                        if (result.includes("Error")) {
+                            msgAlert(result, "danger");
+                        } else {
+                            appElementos.refresh(appEstudios.activeIndex);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var msg = '<span class="text-bold">' +
+                            error +
+                            '</span><br/>Estatus: ' +
+                            xhr.status +
+                            '<br/>Descripción: ' +
+                            xhr.statusText;
+                        msgAlert(msg, "danger");
+                    }
+                });
+            },
+            removeElementsFromList() {
+                this.elementos = [];
+                this.showPanel = false;
+            }
+        }
+    });
+
+    function msgAlert(message, type) {
+        $.niftyNoty({
+            type: type,
+            icon: 'demo-pli-information icon-3x',
+            message: message,
+            container: 'floating',
+            timer: 10000
+        });
+    }
+</script>

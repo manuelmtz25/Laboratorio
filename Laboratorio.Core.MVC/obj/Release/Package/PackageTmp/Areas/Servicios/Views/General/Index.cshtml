@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_NiftyLayout.cshtml";
+}
+
+<style>
+    .isActive {
+        background-color: #e8e8e8;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-4">
+        <div id="app-main">
+            <button class="btn btn-block btn-rounded btn-outline-primary" v-on:click='refreshAllEstudios'>Refrescar</button>
+            <br />
+        </div>
+        <div id="partialView_Perfiles"></div>
+    </div>
+    <div class="col-md-8">
+        <div id="partialView_Estudios"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="partialView_Elementos"></div>
+    </div>
+</div>
+
+<script>
+    $('#partialView_Perfiles').load('@(Url.Action("Index", "Perfiles", new {}))');
+    $('#partialView_Estudios').load('@(Url.Action("Index", "Estudios", new {}))');
+    $('#partialView_Elementos').load('@(Url.Action("Index", "Elementos", new {}))');
+
+    const appMain=new Vue({
+        el: '#app-main',
+        data: {
+            msg:''
+        },
+        methods: {
+            refreshAllEstudios() {
+                appEstudios.showRemoveRelation = false;
+                appEstudios.showRemoveElement = true;
+                appPerfiles.showRemoveElement = true;
+                appEstudios.refresh();
+                appPerfiles.refresh();
+                appElementos.removeElementsFromList();
+                appPerfiles.activeIndex = null;
+                appEstudios.activeIndex = null;
+            }
+        }
+    })
+</script>

@@ -1,0 +1,150 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<div id="app-perfiles">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Perfiles</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 text-sm pad-btm">Agregar un nuevo perfil:</div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="perfil.nombre" type="text" class="form-control" placeholder="Nombre">
+                </div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="perfil.costo" type="number" class="form-control" placeholder="Costo">
+                </div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="perfil.grupo" type="text" class="form-control" placeholder="Grupo">
+                </div>
+            </div>
+            <div class="row text-right pad-btm">
+                <div class="col-md-12">
+                    <button v-on:click="submitData" class="btn btn-rounded btn-primary">Agregar perfil</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="list-group">
+                    <li v-for="perfil in perfiles" class="list-group-item" :class="{'isActive': perfil.Id == activeIndex}">
+                        <div >
+                            <span class="pull-right text-bold">
+                                <button v-show="showRemoveElement" v-on:click="removeElement(perfil.Id)" class="btn btn-dark btn-xs btn-circle">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                            </span>
+                            <div v-on:click="refrescarEstudios(perfil.Id)">
+                                <h5 class="list-group-item-heading">{{perfil.Nombre}} <span class="text-thin">($ {{perfil.Costo}})</span></h5>
+                                <em>{{perfil.Grupo}}</em>
+                            </div>
+                        </div>
+
+                    </li>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const appPerfiles = new Vue({
+        el: '#app-perfiles',
+        data: {
+            perfiles: [],
+            perfil: {
+                nombre: '',
+                costo: '',
+                grupo: ''
+            },
+            activeIndex: null,
+            showRemoveElement:true
+        },
+        created() {
+            fetch('@Url.Action("ObtenerPerfiles", "Perfiles")')
+                .then(response => response.json())
+                .then(json => { this.perfiles = json.perfiles });
+        },
+        methods: {
+            submitData(event) {
+                if (appPerfiles.perfil.nombre !== "" && appPerfiles.perfil.costo !== "" && appPerfiles.perfil.grupo !== "") {
+                    event.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("CrearPerfil", "Perfiles")',
+                        data: this.perfil,
+                        success: function (result, status, xhr) {
+                            if (result.includes("Error")) {
+                                msgAlert(result, "danger");
+                            } else {
+                                appPerfiles.perfil = {
+                                    nombre: '',
+                                    costo: '',
+                                    grupo: ''
+                                };
+                                appPerfiles.refresh();
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            var msg = '<span class="text-bold">' + error + '</span><br/>Estatus: ' + xhr.status + '<br/>Descripción: ' + xhr.statusText;
+                            msgAlert(msg, "danger");
+                        }
+                    });
+                } else {
+                    msgAlert("Campos vacíos", "warning");
+                }
+            },
+            refresh(idEstudio) {
+                fetch('@Url.Action("ObtenerPerfiles", "Perfiles")/?idEstudios=' + idEstudio)
+                    .then(response => response.json())
+                    .then(json => { this.perfiles = json.perfiles });
+            },
+            removeElement(value) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("BorrarPerfil", "Perfiles")',
+                    data: { value },
+                    success: function (result, status, xhr) {
+                        if (result.includes("Error")) {
+                            msgAlert(result, "danger");
+                        } else {
+                            appPerfiles.refresh();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var msg = '<span class="text-bold">' +
+                            error +
+                            '</span><br/>Estatus: ' +
+                            xhr.status +
+                            '<br/>Descripción: ' +
+                            xhr.statusText;
+                        msgAlert(msg, "danger");
+                    }
+                });
+            },
+            refrescarEstudios(value) {
+                appEstudios.showRemoveRelation = true;
+                appEstudios.showRemoveElement = false;
+                this.showRemoveElement = false;
+                appEstudios.refresh(value);
+                appElementos.removeElementsFromList();
+                this.activeIndex = value;
+                appEstudios.activeIndex = null;
+                appEstudios.selected= '',
+                appEstudios.options= []
+            }
+        }
+    });
+
+    function msgAlert(message, type) {
+        $.niftyNoty({
+            type: type,
+            icon: 'demo-pli-information icon-3x',
+            message: message,
+            container: 'floating',
+            timer: 10000
+        });
+    }
+</script>

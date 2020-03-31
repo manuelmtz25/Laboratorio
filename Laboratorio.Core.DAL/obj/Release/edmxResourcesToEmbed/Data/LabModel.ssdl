@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="mmadatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="lab_Elementos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+    <Property Name="UnidadMedida" Type="nvarchar" MaxLength="50" />
+    <Property Name="Notas" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="lab_Estudios">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+    <Property Name="Costo" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Grupo" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="lab_Estudios_x_Elementos">
+    <Key>
+      <PropertyRef Name="Id_lab_Estudios" />
+      <PropertyRef Name="Id_lab_Elementos" />
+    </Key>
+    <Property Name="Id_lab_Estudios" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Id_lab_Elementos" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <EntityType Name="lab_Perfiles">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+    <Property Name="Costo" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Grupo" Type="nvarchar" MaxLength="255" />
+  </EntityType>
+  <EntityType Name="lab_Perfiles_x_Estudios">
+    <Key>
+      <PropertyRef Name="Id_lab_Perfiles" />
+      <PropertyRef Name="Id_lab_Estudios" />
+    </Key>
+    <Property Name="Id_lab_Perfiles" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="Id_lab_Estudios" Type="uniqueidentifier" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Id_lab_Elementos_EXE">
+    <End Role="lab_Elementos" Type="Self.lab_Elementos" Multiplicity="1" />
+    <End Role="lab_Estudios_x_Elementos" Type="Self.lab_Estudios_x_Elementos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="lab_Elementos">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="lab_Estudios_x_Elementos">
+        <PropertyRef Name="Id_lab_Elementos" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Id_lab_Estudios_EXE">
+    <End Role="lab_Estudios" Type="Self.lab_Estudios" Multiplicity="1" />
+    <End Role="lab_Estudios_x_Elementos" Type="Self.lab_Estudios_x_Elementos" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="lab_Estudios">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="lab_Estudios_x_Elementos">
+        <PropertyRef Name="Id_lab_Estudios" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Id_lab_Estudios_PXE">
+    <End Role="lab_Estudios" Type="Self.lab_Estudios" Multiplicity="1" />
+    <End Role="lab_Perfiles_x_Estudios" Type="Self.lab_Perfiles_x_Estudios" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="lab_Estudios">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="lab_Perfiles_x_Estudios">
+        <PropertyRef Name="Id_lab_Estudios" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Id_lab_Perfiles_PXE">
+    <End Role="lab_Perfiles" Type="Self.lab_Perfiles" Multiplicity="1" />
+    <End Role="lab_Perfiles_x_Estudios" Type="Self.lab_Perfiles_x_Estudios" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="lab_Perfiles">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="lab_Perfiles_x_Estudios">
+        <PropertyRef Name="Id_lab_Perfiles" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="mmadatabaseModelStoreContainer">
+    <EntitySet Name="lab_Elementos" EntityType="Self.lab_Elementos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="lab_Estudios" EntityType="Self.lab_Estudios" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="lab_Estudios_x_Elementos" EntityType="Self.lab_Estudios_x_Elementos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="lab_Perfiles" EntityType="Self.lab_Perfiles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="lab_Perfiles_x_Estudios" EntityType="Self.lab_Perfiles_x_Estudios" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Id_lab_Elementos_EXE" Association="Self.FK_Id_lab_Elementos_EXE">
+      <End Role="lab_Elementos" EntitySet="lab_Elementos" />
+      <End Role="lab_Estudios_x_Elementos" EntitySet="lab_Estudios_x_Elementos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Id_lab_Estudios_EXE" Association="Self.FK_Id_lab_Estudios_EXE">
+      <End Role="lab_Estudios" EntitySet="lab_Estudios" />
+      <End Role="lab_Estudios_x_Elementos" EntitySet="lab_Estudios_x_Elementos" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Id_lab_Estudios_PXE" Association="Self.FK_Id_lab_Estudios_PXE">
+      <End Role="lab_Estudios" EntitySet="lab_Estudios" />
+      <End Role="lab_Perfiles_x_Estudios" EntitySet="lab_Perfiles_x_Estudios" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Id_lab_Perfiles_PXE" Association="Self.FK_Id_lab_Perfiles_PXE">
+      <End Role="lab_Perfiles" EntitySet="lab_Perfiles" />
+      <End Role="lab_Perfiles_x_Estudios" EntitySet="lab_Perfiles_x_Estudios" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

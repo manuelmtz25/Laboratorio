@@ -1,0 +1,113 @@
+﻿.panel {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.navbar-content {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)!important;
+    background-color: #3D1951;
+}
+
+#mainnav-container {
+    /* border-right: 1px solid rgba(0,0,0,0.1) !important; */
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12)!important;
+}
+
+/* Para que la sombra no tape el área del logo y nombre de la barra superior */
+@media (min-width: 768px) {
+    .navbar-header {
+        z-index: 1;
+    }
+}
+
+.menuTitle {
+    font-weight: 300;
+    font-size: 400%;
+    color: #3d1951;
+}
+
+.menuTitle2 {
+    font-weight: 300;
+    font-size: 300%;
+    color: #3d1951;
+}
+
+.menuSubtitle {
+    font-weight: 300;
+    font-size: 200%;
+    color: #3d1951;
+}
+
+.whiteText {
+    color: #fff;
+}
+
+.z-depth-1 {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12) !important;
+}
+
+.z-depth-1:hover {
+    transition-duration: 0.3s;
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.z-depth-2 {
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.z-depth-2:hover {
+    transition-duration: 0.3s;
+    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.z-depth-3 {
+    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19) !important;
+}
+
+.z-depth-3:hover {
+    transition-duration: 0.3s;
+    box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.22), 0 25px 55px 0 rgba(0, 0, 0, 0.21) !important;
+}
+
+.z-depth-4 {
+    box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.22), 0 25px 55px 0 rgba(0, 0, 0, 0.21) !important;
+}
+
+.z-depth-4:hover {
+    transition-duration: 0.3s;
+    box-shadow: 0 27px 24px 0 rgba(0, 0, 0, 0.2), 0 40px 77px 0 rgba(0, 0, 0, 0.22) !important;
+}
+
+/* Inicio Choosen */
+
+.chosen-container-active .chosen-single {
+    border: 1px solid #3D1951 !important;
+}
+
+.chosen-container-active.chosen-with-drop .chosen-single {
+    border: 1px solid #3D1951 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.chosen-container .chosen-drop {
+    border: 1px solid #3D1951 !important;
+    border-top: 0 !important;
+}
+
+/* Fin Choosen */
+
+/* Inicio Borde superior e inferior del menú */
+#mainnav-menu > .active {
+    border-top: 1px solid rgba(0,0,0,0.1) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+}
+
+#mainnav .mainnav-profile .list-group {
+    border-top: 1px solid rgba(0,0,0,0.1) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.1) !important;
+}
+/* Fin Borde superior e inferior del menú */
+
+.sombra {
+    border-radius: 20px;
+    box-shadow: 0 8px 20px 0 rgba(0,0,0,0.3), 0 8px 20px 0 rgba(0,0,0,0.3) !important;
+}

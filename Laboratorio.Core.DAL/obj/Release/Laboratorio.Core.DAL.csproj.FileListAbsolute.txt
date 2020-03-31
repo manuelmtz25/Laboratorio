@@ -1,0 +1,10 @@
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\bin\Release\Laboratorio.Core.DAL.dll.config
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\bin\Release\Laboratorio.Core.DAL.dll
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\bin\Release\Laboratorio.Core.DAL.pdb
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\bin\Release\EntityFramework.dll
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\bin\Release\EntityFramework.SqlServer.dll
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\bin\Release\EntityFramework.xml
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\bin\Release\EntityFramework.SqlServer.xml
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\obj\Release\Laboratorio.Core.DAL.csprojResolveAssemblyReference.cache
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\obj\Release\Laboratorio.Core.DAL.dll
+C:\Users\mmartineza\Desktop\MMA_Projects\MMA\Laboratorio\Laboratorio.Core.DAL\obj\Release\Laboratorio.Core.DAL.pdb

@@ -1,0 +1,125 @@
+﻿
+@{
+    ViewBag.Title = "PruebaLaboratorio";
+    Layout = "~/Views/Shared/_NiftyLayout.cshtml";
+}
+
+<div id="app-pruebaLaboratorio">
+    <div v-show="showLabItems">
+        <div class="row">
+            <div class="col-md-6">
+                <button v-on:click="realizarPrueba" class="btn btn-lg btn-rounded btn-primary">Aceptar</button>
+                <h1>Pefiles</h1>
+                <div v-for="perfil in perfiles" class="form-inline">
+                    <input type="checkbox" v-bind:id="perfil.Id" v-bind:value="perfil.Id" v-model="checkedNamesPerfiles">
+                    <label v-bind:for="perfil.Id" class="text-info text-2x text-thin">{{perfil.Nombre}}</label>
+                </div>
+
+                <h1>Estudios</h1>
+                <div v-for="estudio in estudios">
+                    <input type="checkbox" v-bind:id="estudio.Id" v-bind:value="estudio.Id" v-model="checkedNamesEstudios">
+                    <label v-bind:for="estudio.Id" class="text-info text-2x text-thin">{{estudio.Nombre}}</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                
+            </div>
+        </div>
+    </div>
+    
+    <div v-show="showForm">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+        <div v-for="perfil in pruebaLaboratorio.Perfiles">
+            <h3 class="">{{perfil.Nombre}}</h3>
+            <div v-for="estudio in perfil.Estudios">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-bordered-info">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">{{estudio.Nombre}}</h3>
+                            </div>
+                            <div class="panel-body">
+                                <div v-for="elemento in estudio.Elementos">
+                                    <div class="col-md-4">
+                                        <label class="text-sm">{{elemento.Nombre}}</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const appPruebaLaboratorio = new Vue({
+        el: '#app-pruebaLaboratorio',
+        data: {
+            perfiles: [],
+            estudios: [],
+            checkedNamesPerfiles: [],
+            checkedNamesEstudios: [],
+            showLabItems: true,
+            showForm: false,
+            pruebaLaboratorio:""
+        },
+        created() {
+            fetch('@Url.Action("ObtenerPerfiles", "Perfiles")')
+                .then(response => response.json())
+                .then(json => { this.perfiles = json.perfiles });
+
+            fetch('@Url.Action("ObtenerEstudios", "Estudios")')
+                .then(response => response.json())
+                .then(json => { this.estudios = json.estudios });
+        },
+        methods: {
+            realizarPrueba() {
+                this.showLabItems = !this.showLabItems;
+                this.showForm = !this.showForm;
+                let checkedNamesPerfiles = this.checkedNamesPerfiles;
+                let checkedNamesEstudios = this.checkedNamesEstudios;
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("ObtenerItemsPorPrueba", "General")',
+                    data: { checkedNamesPerfiles, checkedNamesEstudios },
+                    success: function(result, status, xhr) {
+                        if (result.includes("Error")) {
+                            msgAlert(result, "danger");
+                        } else {
+                            appPruebaLaboratorio.pruebaLaboratorio = JSON.parse(result);
+                            $('.sk-three-bounce').hide();
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        var msg = '<span class="text-bold">' +
+                            error +
+                            '</span><br/>Estatus: ' +
+                            xhr.status +
+                            '<br/>Descripción: ' +
+                            xhr.statusText;
+                        msgAlert(msg, "danger");
+                    }
+                });
+            }
+        }
+    });
+
+    function msgAlert(message, type) {
+        $.niftyNoty({
+            type: type,
+            icon: 'demo-pli-information icon-3x',
+            message: message,
+            container: 'floating',
+            timer: 10000
+        });
+    }
+
+</script>

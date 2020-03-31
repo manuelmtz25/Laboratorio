@@ -1,0 +1,209 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = null;
+}
+
+<div id="app-estudios">
+    <div class="panel">
+        <div class="panel-heading">
+            <h3 class="panel-title">Estudios</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12 text-sm pad-btm">Agregar un nuevo estudio:</div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="estudio.nombre" type="text" class="form-control" placeholder="Nombre">
+                </div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="estudio.costo" type="number" class="form-control" placeholder="Costo">
+                </div>
+                <div class="col-md-4 mar-btm">
+                    <input v-model="estudio.grupo" type="text" class="form-control" placeholder="Grupo">
+                </div>
+            </div>
+            <div v-show="showRemoveRelation">
+                <div class="row pad-btm">
+                    <div class="col-md-12 text-sm pad-btm">Agregar estudio ya existente:</div>
+                    <div class="col-md-12">
+                        <select class="select-css" v-model="selected">
+                            <option v-for="option in options" v-bind:value="option.Id">
+                                {{ option.Nombre }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row text-right pad-btm">
+                <div class="col-md-12">
+                    <button v-on:click="submitData" class="btn btn-rounded btn-primary">Agregar estudio</button>
+                </div>
+            </div>
+
+            <div class="list-group">
+                <li v-for="estudio in estudios" class="list-group-item" :class="{'isActive': estudio.Id == activeIndex}">
+                    <span class="pull-right text-bold">
+                        <button v-show="showRemoveElement" v-on:click="removeElement(estudio.Id)" class="btn btn-dark btn-xs btn-circle">
+                            <i class="fa fa-close"></i>
+                        </button>
+                        <button v-show="showRemoveRelation" v-on:click="removeRelation(estudio.Id)" class="btn btn-dark btn-xs btn-circle">
+                            <i class="fa fa-unlink"></i>
+                        </button>
+                    </span>
+                    <div v-on:click="refrescarPerfiles(estudio.Id)">
+                        <h5 class="list-group-item-heading">{{estudio.Nombre}} <span class="text-thin">($ {{estudio.Costo}})</span></h5>
+                        <em>{{estudio.Grupo}}</em>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const appEstudios = new Vue({
+        el: '#app-estudios',
+        data: {
+            estudios: [],
+            estudio: {
+                nombre: '',
+                costo: '',
+                grupo: ''
+            },
+            activeIndex: null,
+            showRemoveRelation: false,
+            showRemoveElement: true,
+            selected: '',
+            options: []
+        },
+        created() {
+            fetch('@Url.Action("ObtenerEstudios", "Estudios")')
+                .then(response => response.json())
+                .then(json => { this.estudios = json.estudios });
+        },
+        methods: {
+            submitData(event) {
+                if (appEstudios.estudio.nombre !== "" && appEstudios.estudio.costo !== "" && appEstudios.estudio.grupo !== "") {
+                    event.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("CrearEstudio", "Estudios")?idPerfil=' + appPerfiles.activeIndex,
+                        data: this.estudio,
+                        success: function (result, status, xhr) {
+                            if (result.includes("Error")) {
+                                msgAlert(result, "danger");
+                            } else {
+                                appEstudios.estudio = {
+                                    nombre: '',
+                                    costo: '',
+                                    grupo: ''
+                                };
+                                appEstudios.refresh(appPerfiles.activeIndex);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            var msg = '<span class="text-bold">' + error + '</span><br/>Estatus: ' + xhr.status + '<br/>Descripción: ' + xhr.statusText;
+                            msgAlert(msg, "danger");
+                        }
+                    });
+                } else if (appEstudios.selected !== "") {
+                    event.preventDefault();
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("CrearRelacion", "Estudios")?idPerfil=' + appPerfiles.activeIndex,
+                        data: { selected: this.selected },
+                        success: function (result, status, xhr) {
+                            if (result.includes("Error")) {
+                                msgAlert(result, "danger");
+                            } else {
+                                appEstudios.selected = '';
+                                appEstudios.options = [];
+                                appEstudios.refresh(appPerfiles.activeIndex);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            var msg = '<span class="text-bold">' + error + '</span><br/>Estatus: ' + xhr.status + '<br/>Descripción: ' + xhr.statusText;
+                            msgAlert(msg, "danger");
+                        }
+                    });
+                } else {
+                    msgAlert("Campos vacíos", "warning");
+                }
+            },
+            refresh(idPerfil) {
+                fetch('@Url.Action("ObtenerEstudios", "Estudios")/?idPerfil=' + idPerfil)
+                    .then(response => response.json())
+                    .then(json => { this.estudios = json.estudios });
+
+                fetch('@Url.Action("ObtenerEstudiosDisponibles", "Estudios")/?idPerfil=' + idPerfil)
+                    .then(response => response.json())
+                    .then(json => { this.options = json.estudios });
+            },
+            removeElement(value) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("BorrarEstudio", "Estudios")',
+                    data: { value },
+                    success: function (result, status, xhr) {
+                        if (result.includes("Error")) {
+                            msgAlert(result, "danger");
+                        } else {
+                            appEstudios.refresh();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var msg = '<span class="text-bold">' +
+                            error +
+                            '</span><br/>Estatus: ' +
+                            xhr.status +
+                            '<br/>Descripción: ' +
+                            xhr.statusText;
+                        msgAlert(msg, "danger");
+                    }
+                });
+            },
+            removeRelation(value) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("BorrarRelacion", "Estudios")?idPerfil=' + appPerfiles.activeIndex,
+                    data: { value },
+                    success: function (result, status, xhr) {
+                        if (result.includes("Error")) {
+                            msgAlert(result, "danger");
+                        } else {
+                            appEstudios.refresh(appPerfiles.activeIndex);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        var msg = '<span class="text-bold">' +
+                            error +
+                            '</span><br/>Estatus: ' +
+                            xhr.status +
+                            '<br/>Descripción: ' +
+                            xhr.statusText;
+                        msgAlert(msg, "danger");
+                    }
+                });
+            },
+            refrescarPerfiles(value) {
+                this.showRemoveElement = false;
+                this.showRemoveRelation = false;
+                appPerfiles.showRemoveElement = false;
+                appPerfiles.refresh(value);
+                appElementos.removeElementsFromList();
+                this.activeIndex = value;
+                appPerfiles.activeIndex = null;
+                appElementos.refresh(value);
+            }
+        }
+    });
+
+    function msgAlert(message, type) {
+        $.niftyNoty({
+            type: type,
+            icon: 'demo-pli-information icon-3x',
+            message: message,
+            container: 'floating',
+            timer: 10000
+        });
+    }
+</script>

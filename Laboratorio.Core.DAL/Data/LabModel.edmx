@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="mmadatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="lab_Elementos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+          <Property Name="UnidadMedida" Type="nvarchar" MaxLength="50" />
+          <Property Name="Notas" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="lab_Estudios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+          <Property Name="Costo" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Grupo" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="lab_Estudios_x_Elementos">
+          <Key>
+            <PropertyRef Name="Id_lab_Estudios" />
+            <PropertyRef Name="Id_lab_Elementos" />
+          </Key>
+          <Property Name="Id_lab_Estudios" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Id_lab_Elementos" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <EntityType Name="lab_Perfiles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Nombre" Type="nvarchar" MaxLength="255" />
+          <Property Name="Costo" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Grupo" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="lab_Perfiles_x_Estudios">
+          <Key>
+            <PropertyRef Name="Id_lab_Perfiles" />
+            <PropertyRef Name="Id_lab_Estudios" />
+          </Key>
+          <Property Name="Id_lab_Perfiles" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Id_lab_Estudios" Type="uniqueidentifier" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Id_lab_Elementos_EXE">
+          <End Role="lab_Elementos" Type="Self.lab_Elementos" Multiplicity="1" />
+          <End Role="lab_Estudios_x_Elementos" Type="Self.lab_Estudios_x_Elementos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lab_Elementos">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="lab_Estudios_x_Elementos">
+              <PropertyRef Name="Id_lab_Elementos" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Id_lab_Estudios_EXE">
+          <End Role="lab_Estudios" Type="Self.lab_Estudios" Multiplicity="1" />
+          <End Role="lab_Estudios_x_Elementos" Type="Self.lab_Estudios_x_Elementos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lab_Estudios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="lab_Estudios_x_Elementos">
+              <PropertyRef Name="Id_lab_Estudios" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Id_lab_Estudios_PXE">
+          <End Role="lab_Estudios" Type="Self.lab_Estudios" Multiplicity="1" />
+          <End Role="lab_Perfiles_x_Estudios" Type="Self.lab_Perfiles_x_Estudios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lab_Estudios">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="lab_Perfiles_x_Estudios">
+              <PropertyRef Name="Id_lab_Estudios" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Id_lab_Perfiles_PXE">
+          <End Role="lab_Perfiles" Type="Self.lab_Perfiles" Multiplicity="1" />
+          <End Role="lab_Perfiles_x_Estudios" Type="Self.lab_Perfiles_x_Estudios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="lab_Perfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="lab_Perfiles_x_Estudios">
+              <PropertyRef Name="Id_lab_Perfiles" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="mmadatabaseModelStoreContainer">
+          <EntitySet Name="lab_Elementos" EntityType="Self.lab_Elementos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lab_Estudios" EntityType="Self.lab_Estudios" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lab_Estudios_x_Elementos" EntityType="Self.lab_Estudios_x_Elementos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lab_Perfiles" EntityType="Self.lab_Perfiles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="lab_Perfiles_x_Estudios" EntityType="Self.lab_Perfiles_x_Estudios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Id_lab_Elementos_EXE" Association="Self.FK_Id_lab_Elementos_EXE">
+            <End Role="lab_Elementos" EntitySet="lab_Elementos" />
+            <End Role="lab_Estudios_x_Elementos" EntitySet="lab_Estudios_x_Elementos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Id_lab_Estudios_EXE" Association="Self.FK_Id_lab_Estudios_EXE">
+            <End Role="lab_Estudios" EntitySet="lab_Estudios" />
+            <End Role="lab_Estudios_x_Elementos" EntitySet="lab_Estudios_x_Elementos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Id_lab_Estudios_PXE" Association="Self.FK_Id_lab_Estudios_PXE">
+            <End Role="lab_Estudios" EntitySet="lab_Estudios" />
+            <End Role="lab_Perfiles_x_Estudios" EntitySet="lab_Perfiles_x_Estudios" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Id_lab_Perfiles_PXE" Association="Self.FK_Id_lab_Perfiles_PXE">
+            <End Role="lab_Perfiles" EntitySet="lab_Perfiles" />
+            <End Role="lab_Perfiles_x_Estudios" EntitySet="lab_Perfiles_x_Estudios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="mmadatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="mmadatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="lab_Elementos" EntityType="mmadatabaseModel.lab_Elementos" />
+          <EntitySet Name="lab_Estudios" EntityType="mmadatabaseModel.lab_Estudios" />
+          <EntitySet Name="lab_Perfiles" EntityType="mmadatabaseModel.lab_Perfiles" />
+          <AssociationSet Name="lab_Estudios_x_Elementos" Association="mmadatabaseModel.lab_Estudios_x_Elementos">
+            <End Role="lab_Elementos" EntitySet="lab_Elementos" />
+            <End Role="lab_Estudios" EntitySet="lab_Estudios" />
+          </AssociationSet>
+          <AssociationSet Name="lab_Perfiles_x_Estudios" Association="mmadatabaseModel.lab_Perfiles_x_Estudios">
+            <End Role="lab_Estudios" EntitySet="lab_Estudios" />
+            <End Role="lab_Perfiles" EntitySet="lab_Perfiles" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="lab_Elementos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="UnidadMedida" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Notas" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="lab_Estudios" Relationship="mmadatabaseModel.lab_Estudios_x_Elementos" FromRole="lab_Elementos" ToRole="lab_Estudios" />
+        </EntityType>
+        <EntityType Name="lab_Estudios">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Costo" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="lab_Elementos" Relationship="mmadatabaseModel.lab_Estudios_x_Elementos" FromRole="lab_Estudios" ToRole="lab_Elementos" />
+          <NavigationProperty Name="lab_Perfiles" Relationship="mmadatabaseModel.lab_Perfiles_x_Estudios" FromRole="lab_Estudios" ToRole="lab_Perfiles" />
+          <Property Name="Grupo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="lab_Perfiles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Costo" Type="Decimal" Precision="18" Scale="2" />
+          <NavigationProperty Name="lab_Estudios" Relationship="mmadatabaseModel.lab_Perfiles_x_Estudios" FromRole="lab_Perfiles" ToRole="lab_Estudios" />
+          <Property Name="Grupo" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="lab_Estudios_x_Elementos">
+          <End Type="mmadatabaseModel.lab_Elementos" Role="lab_Elementos" Multiplicity="*" />
+          <End Type="mmadatabaseModel.lab_Estudios" Role="lab_Estudios" Multiplicity="*" />
+        </Association>
+        <Association Name="lab_Perfiles_x_Estudios">
+          <End Type="mmadatabaseModel.lab_Estudios" Role="lab_Estudios" Multiplicity="*" />
+          <End Type="mmadatabaseModel.lab_Perfiles" Role="lab_Perfiles" Multiplicity="*" />
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="mmadatabaseModelStoreContainer" CdmEntityContainer="mmadatabaseEntities">
+          <EntitySetMapping Name="lab_Elementos">
+            <EntityTypeMapping TypeName="mmadatabaseModel.lab_Elementos">
+              <MappingFragment StoreEntitySet="lab_Elementos">
+                <ScalarProperty Name="Notas" ColumnName="Notas" />
+                <ScalarProperty Name="UnidadMedida" ColumnName="UnidadMedida" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lab_Estudios">
+            <EntityTypeMapping TypeName="mmadatabaseModel.lab_Estudios">
+              <MappingFragment StoreEntitySet="lab_Estudios">
+                <ScalarProperty Name="Grupo" ColumnName="Grupo" />
+                <ScalarProperty Name="Costo" ColumnName="Costo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="lab_Perfiles">
+            <EntityTypeMapping TypeName="mmadatabaseModel.lab_Perfiles">
+              <MappingFragment StoreEntitySet="lab_Perfiles">
+                <ScalarProperty Name="Grupo" ColumnName="Grupo" />
+                <ScalarProperty Name="Costo" ColumnName="Costo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="lab_Estudios_x_Elementos" TypeName="mmadatabaseModel.lab_Estudios_x_Elementos" StoreEntitySet="lab_Estudios_x_Elementos">
+            <EndProperty Name="lab_Estudios">
+              <ScalarProperty Name="Id" ColumnName="Id_lab_Estudios" />
+            </EndProperty>
+            <EndProperty Name="lab_Elementos">
+              <ScalarProperty Name="Id" ColumnName="Id_lab_Elementos" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="lab_Perfiles_x_Estudios" TypeName="mmadatabaseModel.lab_Perfiles_x_Estudios" StoreEntitySet="lab_Perfiles_x_Estudios">
+            <EndProperty Name="lab_Perfiles">
+              <ScalarProperty Name="Id" ColumnName="Id_lab_Perfiles" />
+            </EndProperty>
+            <EndProperty Name="lab_Estudios">
+              <ScalarProperty Name="Id" ColumnName="Id_lab_Estudios" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
